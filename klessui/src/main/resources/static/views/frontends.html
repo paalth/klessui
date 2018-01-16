@@ -1,0 +1,45 @@
+<div ng-controller="FrontendsController">
+
+	<h2>Existing frontends</h2>
+
+	<div align="right">
+	
+		<a ui-sref="frontendCreate" class="md-button md-raised md-primary">Create</a>
+		
+		<a ui-sref="frontendDelete" class="md-button md-raised md-primary">Delete</a>
+
+	</div>
+
+	<md-content layout="column" flex>
+
+      <md-card>
+      
+		<md-toolbar class="md-table-toolbar md-default">
+		  <div class="md-toolbar-tools">
+		    <span>Existing frontends</span>
+		  </div>
+		</md-toolbar>
+		  
+		<md-table-container>
+		  <table md-table md-row-select multiple ng-model="selected" md-progress="promise">
+		    <thead md-head md-order="frontend.eventHandlerFrontendName">
+		      <tr md-row>
+		        <th align="left" style="padding-left: 25px">Name</th>
+		        <th align="left">Type</th>
+		        <th align="left">Description</th>
+		      </tr>
+		    </thead>
+		    <tbody md-body>
+		      <tr md-row md-select="frontend" md-select-id="eventHandlerFrontendName" md-auto-select ng-repeat="frontend in frontends">
+		        <td md-cell>{{ frontend.eventHandlerFrontendName }}</td>
+		        <td md-cell>{{ frontend.eventHandlerFrontendType }}</td>
+		        <td md-cell>TBD</td>
+		      </tr>
+		    </tbody>
+		  </table>
+		</md-table-container>  
+
+	  </md-card>
+	
+	</md-content>
+</div>

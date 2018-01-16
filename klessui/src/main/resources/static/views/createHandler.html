@@ -1,0 +1,81 @@
+<div ng-controller="CreateHandlerController">
+
+	<md-content layout-padding>
+    
+	      <md-card>
+    
+		    <ng-form name="createHandlerForm">
+		    
+			<div layout="row" layout-padding>
+			  <div flex="35">
+  
+				    <h2>Handler information</h2>
+				    
+			        <md-input-container class="md-block">
+			          <label>Name</label>
+			          <input ng-model="newHandler.name">
+			        </md-input-container>
+	
+			        <md-input-container class="md-block">
+			          <label>Builder</label>
+			          <!-- 
+			          <input ng-model="newHandler.builder">
+			           -->
+	                  <md-select ng-model="newHandler.builder">
+			            <md-option ng-repeat="builder in builders" ng-value="builder.eventHandlerBuilderName">
+			              {{builder.eventHandlerBuilderName}}
+			            </md-option>
+			          </md-select>
+			        </md-input-container>
+			        
+			        <md-input-container class="md-block">
+			          <label>Frontend</label>
+			          <!-- 
+			          <input ng-model="newHandler.frontend">
+			          -->
+			          <md-select ng-model="newHandler.frontend">
+			            <md-option ng-repeat="frontend in frontends" ng-value="frontend.eventHandlerFrontendName">
+			              {{frontend.eventHandlerFrontendName}}
+			            </md-option>
+			          </md-select>
+			        </md-input-container>
+			        
+			        <md-input-container class="md-block">
+			          <label>Version</label>
+			          <input ng-model="newHandler.version">
+			        </md-input-container>
+			        		        		        		        	    
+			        <md-input-container class="md-block">
+			          <label>Namespace</label>
+			          <input ng-model="newHandler.namespace">
+			        </md-input-container> 
+	
+				    <h2>Dependencies:</h2>
+				    
+				    <textarea ng-model="newHandler.dependencies" style="width: 100%; height: 150px;"></textarea>
+				    
+				    <md-button class="md-raised md-primary" id="createHandlerButton" ng-click="createHandler(newHandler)">Create</md-button>
+
+			  </div>				    
+			
+			  <div flex="65">				   		    			    
+  
+				    <h2>Source code:</h2>
+				    
+					<div ui-ace="{
+				       useWrapMode : true,
+				       showGutter: true,
+				       theme:'twilight',
+				       mode: 'golang'
+				       }" ng-model="newHandler.sourceCode" style="height: 600px;"></div>
+			
+			  </div>
+			</div>
+  			
+		     </ng-form>
+		
+		</md-card>
+		
+	</md-content>
+
+</div>

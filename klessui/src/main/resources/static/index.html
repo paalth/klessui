@@ -1,0 +1,76 @@
+<html ng-app="klessuiapp">
+
+<head>
+
+  <title> Kless UI</title>
+
+  <script type="text/javascript" src="/js/angularjs/angular.js"></script>
+  <script type="text/javascript" src="/js/angularjs/angular-resource.js"></script>
+  <script type="text/javascript" src="/js/angularjs/angular-animate.js"></script>
+  <script type="text/javascript" src="/js/angularjs/angular-aria.js"></script>
+  <script type="text/javascript" src="/js/angularjs/angular-messages.js"></script>
+        
+  <script type="text/javascript" src="/js/angularjs-material/angular-material.js"></script>
+  
+  <script type="text/javascript" src="/js/angular-material-data-table/md-data-table.js"></script>
+  
+  <script type="text/javascript" src="/js/angular-ui-router/angular-ui-router.js"></script> 
+  
+  <script type="text/javascript" src="/js/ace/ace.js"></script>
+  
+  <script type="text/javascript" src="/js/ui-ace/ui-ace.js"></script>
+  
+  <link rel="stylesheet" href="/css/angular-material.css" />
+  <link rel="stylesheet" href="/css/md-data-table.css" /> 
+
+  <script type="text/javascript" src="/js/klessui.js"></script>
+    
+</head>
+
+<body ng-controller="ApplicationController">
+     
+<div ng-cloak>
+
+   <md-toolbar>
+     <div class="md-toolbar-tools">
+       <div class="md-title">Kless UI</div>
+     </div>
+   </md-toolbar>
+    
+  <md-content class="md-padding">
+    <md-nav-bar
+      md-selected-nav-item="currentNavItem"
+      nav-bar-aria-label="navigation links">
+      <md-nav-item md-nav-sref="handlers">
+        Handlers
+      </md-nav-item>
+      <md-nav-item md-nav-sref="frontends">
+        Frontends
+      </md-nav-item>
+      <md-nav-item md-nav-sref="frontendTypes">
+        Frontend Types
+      </md-nav-item>
+      <md-nav-item md-nav-sref="builders">
+        Builders
+      </md-nav-item>
+      <md-nav-item md-nav-sref="help">
+        Help
+      </md-nav-item>
+      <md-nav-item md-nav-sref="about">
+        About
+      </md-nav-item>
+
+    </md-nav-bar>
+
+    <div>
+  		<ui-view></ui-view>
+    </div>
+
+  </md-content>
+  
+</div>
+     
+
+</body>
+
+</html>

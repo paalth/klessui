@@ -1,0 +1,56 @@
+<div>
+
+<h2>Kless Help Information</h2>
+
+<h3>kless</h3>
+kless - a native &amp; naive event-handler framework for Kubernetes
+
+<h3>Description</h3> 
+kless is a simple "serverless" framework that supports push & pull events with event handlers written in mainly typed languages.
+
+It is a native Kubernetes framework as it attempts to use existing Kubernetes features to implement functionality where possible, and it is a naive framework as it currently does everything in the simplest possible way that could conceivably work.
+
+<h3>Concepts</h3>
+
+<h4>Event handlers</h4>
+Currently event handlers can be written in the following languages:
+<ul>
+  <li>Java</li>
+  <li>Go</li>
+  <li>Python</li>
+</ul>
+
+However, event handlers can be written in any language that has an implemented "event handler builder". 
+
+<p>kless event handlers implement a language-specific interface and the signature of the event handler consists of a "context", a "request" and a "response".</p>
+
+<p>The "context" is a map of strings that contain information about the event handler and its runtime environment.</p>
+
+<p>The "request" and "response" are both simple objects that have two fields. The first field is a map of string that contains the request/response headers, and the second field is a byte array containing the request/response body.</p>
+
+<p>Usage of the "response" object is optional, and is only applicable if you want to implement a request/reply event handler. If you only want to implement a one-way event handler just ignore the "response" object.</p>
+
+<h4>Event handler builders</h4>
+Event Handler Builders are responsible for compiling the event handler source code and turning it into images that can be deployed in Kubernetes pods. Event Handler Builders are themselves just images/containers registered with kless so in the future any other language can be supported. 
+
+<h4>Frontends</h4>
+kless event handlers have "frontends". Frontends are sidecar containers that either pull events from event sources or are targets that receive events pushed to the handler. Frontends are associated with configuration information that applies to the event source. 
+
+<h4>Frontend types</h4>
+Frontends have a "frontend type". Frontend Types are containers that implement the frontend, and they are registered with kless so in the future any other event source can be supported.
+
+Currently the following push methods are supported:
+
+<ul>
+  <li>HTTP/HTTPS</li>
+</ul>
+
+Currently the following pull methods are supported:
+
+<ul>
+  <li>NATS</li>
+  <li>Kafka</li>
+  <li>RabbitMQ</li>
+</ul>
+
+</div>

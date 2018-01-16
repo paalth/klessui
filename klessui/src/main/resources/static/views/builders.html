@@ -1,0 +1,45 @@
+<div ng-controller="BuildersController">
+
+	<h2>Existing builders</h2>
+
+	<div align="right">
+	
+		<a ui-sref="builderCreate" class="md-button md-raised md-primary">Create</a>
+		
+		<a ui-sref="builderDelete" class="md-button md-raised md-primary">Delete</a>
+
+	</div>
+
+	<md-content layout="column" flex>
+
+      <md-card>
+      
+		<md-toolbar class="md-table-toolbar md-default">
+		  <div class="md-toolbar-tools">
+		    <span>Existing builders</span>
+		  </div>
+		</md-toolbar>
+		  
+		<md-table-container>
+		  <table md-table md-row-select multiple ng-model="selected" md-progress="promise">
+		    <thead md-head md-order="builder.eventHandlerBuilderName">
+		      <tr md-row>
+		        <th align="left" style="padding-left: 25px">Name</th>
+		        <th align="left">Image</th>
+		        <th align="left">Description</th>
+		      </tr>
+		    </thead>
+		    <tbody md-body>
+		      <tr md-row md-select="builder" md-select-id="eventHandlerBuilderName" md-auto-select ng-repeat="builder in builders">
+		        <td md-cell>{{ builder.eventHandlerBuilderName }}</td>
+		        <td md-cell>{{ builder.eventHandlerBuilderURL }}</td>
+		        <td md-cell>TBD</td>
+		      </tr>
+		    </tbody>
+		  </table>
+		</md-table-container>  
+
+	  </md-card>
+	
+	</md-content>
+</div>

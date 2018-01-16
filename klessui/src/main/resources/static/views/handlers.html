@@ -1,0 +1,50 @@
+<div ng-controller="HandlersController">
+
+	<h2>Existing handlers</h2>
+
+	<div align="right">
+	
+		<a ui-sref="handlerCreate" class="md-button md-raised md-primary">Create</a>
+		
+		<a ui-sref="handlerDelete" class="md-button md-raised md-primary">Delete</a>
+	
+		<a ui-sref="handlerStatistics" class="md-button md-raised md-primary">Statistics</a>
+	
+	</div>
+		
+	<md-content layout="column" flex>
+
+      <md-card>
+      
+		<md-toolbar class="md-table-toolbar md-default">
+		  <div class="md-toolbar-tools">
+		    <span>Existing handlers</span>
+		  </div>
+		</md-toolbar>
+		  
+		<md-table-container>
+		  <table md-table md-row-select multiple ng-model="selected" md-progress="promise">
+		    <thead md-head md-order="handler.eventHandlerName">
+		      <tr md-row>
+		        <th align="left" style="padding-left: 25px">Name</th>
+		        <th align="left">Namespace</th>
+		        <th align="left">Version</th>
+		        <th align="left">Status</th>
+		      </tr>
+		    </thead>
+		    <tbody md-body>
+		      <tr md-row md-select="handler" md-select-id="eventHandlerName" md-auto-select ng-repeat="handler in handlers">
+		        <td md-cell>{{ handler.eventHandlerName }}</td>
+		        <td md-cell>{{ handler.eventHandlerNamespace }}</td>
+		        <td md-cell>{{ handler.eventHandlerVersion }}</td>
+		        <td md-cell>TBD</td>
+		      </tr>
+		    </tbody>
+		  </table>
+		</md-table-container>  
+
+	  </md-card>
+	
+	</md-content>
+
+</div>
