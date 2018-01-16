@@ -2,3 +2,14 @@
 /test-classes/
 .DS_Store
 /target/
+/archive-tmp/
+/generated-sources/
+/generated-test-sources/
+/klessui-1.0-SNAPSHOT-jar-with-dependencies.jar
+/klessui-1.0-SNAPSHOT-shaded.jar
+/klessui-1.0-SNAPSHOT.jar
+/libs/
+/maven-archiver/
+/protoc-dependencies/
+/protoc-plugins/
+/surefire-reports/
