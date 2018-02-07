@@ -50,26 +50,50 @@
 			          <input ng-model="newHandler.namespace">
 			        </md-input-container> 
 	
+			        <md-input-container class="md-block">
+			          <label>Comment</label>
+			          <input ng-model="newHandler.comment">
+			        </md-input-container> 
+	
 				    <h2>Dependencies:</h2>
 				    
 				    <textarea ng-model="newHandler.dependencies" style="width: 100%; height: 150px;"></textarea>
 				    
 				    <md-button class="md-raised md-primary" id="createHandlerButton" ng-click="createHandler(newHandler)">Create</md-button>
-
+				    <md-button class="md-raised md-primary" id="cancelButton" ng-click="cancelCreateHandler()">Cancel</md-button>
+				    
 			  </div>				    
 			
-			  <div flex="65">				   		    			    
-  
-				    <h2>Source code:</h2>
-				    
-					<div ui-ace="{
-				       useWrapMode : true,
-				       showGutter: true,
-				       theme:'twilight',
-				       mode: 'golang'
-				       }" ng-model="newHandler.sourceCode" style="height: 600px;"></div>
-			
-			  </div>
+			  <div flex="65" layout="column">				   		    			    
+					
+					<div layout="row" layout-padding layout-align="space-between center">
+					
+					    <h2>Source code:</h2>
+					    
+					    <label>Editor language:</label>
+					    
+					    <md-select ng-model="currentEditorlanguage" ng-click="changeEditorLanguage()">
+				            <md-option ng-repeat="language in editorLanguages" ng-value="language">
+				              {{language}}
+				            </md-option>
+				          </md-select>
+				          
+			        </div>
+			        
+			        <div>
+			          
+						<div ui-ace="{
+					       useWrapMode : true,
+					       showGutter: true,
+					       theme:'twilight',
+					       mode: 'golang'
+					       }" ng-model="newHandler.sourceCode" style="height: 600px;"></div>
+					       
+					    <md-button class="md-raised md-primary" id="resetSourceButton" ng-click="resetSource()">Reset</md-button>
+					
+					</div>
+					
+			  	</div>
 			</div>
   			
 		     </ng-form>

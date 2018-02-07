@@ -30,6 +30,7 @@
 		        <th align="left">Namespace</th>
 		        <th align="left">Version</th>
 		        <th align="left">Status</th>
+		        <th align="left">Comment</th>
 		      </tr>
 		    </thead>
 		    <tbody md-body>
@@ -37,7 +38,8 @@
 		        <td md-cell>{{ handler.eventHandlerName }}</td>
 		        <td md-cell>{{ handler.eventHandlerNamespace }}</td>
 		        <td md-cell>{{ handler.eventHandlerVersion }}</td>
-		        <td md-cell>TBD</td>
+		        <td md-cell>{{ handler.status }}</td>
+		        <td md-cell>{{ handler.comment }}</td>
 		      </tr>
 		    </tbody>
 		  </table>

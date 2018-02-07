@@ -26,14 +26,14 @@
 		      <tr md-row>
 		        <th align="left" style="padding-left: 25px">Type</th>
 		        <th align="left">Image</th>
-		        <th align="left">Description</th>
+		        <th align="left">Comment</th>
 		      </tr>
 		    </thead>
 		    <tbody md-body>
 		      <tr md-row md-select="frontendType" md-select-id="eventHandlerBuilderName" md-auto-select ng-repeat="frontendType in frontendTypes">
 		        <td md-cell>{{ frontendType.eventHandlerFrontendType }}</td>
 		        <td md-cell>{{ frontendType.eventHandlerFrontendTypeURL }}</td>
-		        <td md-cell>TBD</td>
+		        <td md-cell>{{ frontendType.comment }}</td>
 		      </tr>
 		    </tbody>
 		  </table>

@@ -26,14 +26,14 @@
 		      <tr md-row>
 		        <th align="left" style="padding-left: 25px">Name</th>
 		        <th align="left">Type</th>
-		        <th align="left">Description</th>
+		        <th align="left">Comment</th>
 		      </tr>
 		    </thead>
 		    <tbody md-body>
 		      <tr md-row md-select="frontend" md-select-id="eventHandlerFrontendName" md-auto-select ng-repeat="frontend in frontends">
 		        <td md-cell>{{ frontend.eventHandlerFrontendName }}</td>
 		        <td md-cell>{{ frontend.eventHandlerFrontendType }}</td>
-		        <td md-cell>TBD</td>
+		        <td md-cell>{{ frontend.comment }}</td>
 		      </tr>
 		    </tbody>
 		  </table>

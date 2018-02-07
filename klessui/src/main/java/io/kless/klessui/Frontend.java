@@ -17,8 +17,8 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.kless.KlessAPIGrpc;
 import io.kless.KlessAPIGrpc.KlessAPIBlockingStub;
-import io.kless.Klessserver.FrontendInformation;
-import io.kless.Klessserver.GetEventHandlerFrontendsRequest;
+import io.kless.FrontendInformation;
+import io.kless.GetEventHandlerFrontendsRequest;
 
 @Path("frontend")
 public class Frontend {
@@ -50,6 +50,7 @@ public class Frontend {
             JsonObjectBuilder frontendBuilder = Json.createObjectBuilder();
             frontendBuilder.add("eventHandlerFrontendName", frontendInformation.getEventHandlerFrontendName());
             frontendBuilder.add("eventHandlerFrontendType", frontendInformation.getEventHandlerFrontendType());
+            frontendBuilder.add("comment", frontendInformation.getComment());
             
             frontendArray.add(frontendBuilder);
         }

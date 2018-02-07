@@ -17,8 +17,8 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.kless.KlessAPIGrpc;
 import io.kless.KlessAPIGrpc.KlessAPIBlockingStub;
-import io.kless.Klessserver.FrontendTypeInformation;
-import io.kless.Klessserver.GetEventHandlerFrontendTypesRequest;
+import io.kless.FrontendTypeInformation;
+import io.kless.GetEventHandlerFrontendTypesRequest;
 
 @Path("frontendtype")
 public class FrontendType {
@@ -49,6 +49,7 @@ public class FrontendType {
             JsonObjectBuilder frontendTypeBuilder = Json.createObjectBuilder();
             frontendTypeBuilder.add("eventHandlerFrontendType", frontendTypeInformation.getEventHandlerFrontendType());
             frontendTypeBuilder.add("eventHandlerFrontendTypeURL", frontendTypeInformation.getEventHandlerFrontendTypeURL());
+            frontendTypeBuilder.add("comment", frontendTypeInformation.getComment());
             
             frontendTypesArray.add(frontendTypeBuilder);
         }

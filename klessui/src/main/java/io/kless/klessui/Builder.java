@@ -17,8 +17,8 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.kless.KlessAPIGrpc;
 import io.kless.KlessAPIGrpc.KlessAPIBlockingStub;
-import io.kless.Klessserver.EventHandlerBuilderInformation;
-import io.kless.Klessserver.GetEventHandlerBuildersRequest;
+import io.kless.EventHandlerBuilderInformation;
+import io.kless.GetEventHandlerBuildersRequest;
 
 @Path("builder")
 public class Builder {
@@ -49,6 +49,7 @@ public class Builder {
             JsonObjectBuilder eventHandlerBuilder = Json.createObjectBuilder();
             eventHandlerBuilder.add("eventHandlerBuilderName", eventHandlerBuilderInformation.getEventHandlerBuilderName());
             eventHandlerBuilder.add("eventHandlerBuilderURL", eventHandlerBuilderInformation.getEventHandlerBuilderURL());
+            eventHandlerBuilder.add("comment", eventHandlerBuilderInformation.getComment());
             
             builderArray.add(eventHandlerBuilder);
         }

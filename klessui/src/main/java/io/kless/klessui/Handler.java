@@ -28,12 +28,12 @@ import io.grpc.ManagedChannelBuilder;
 
 import io.kless.KlessAPIGrpc;
 import io.kless.KlessAPIGrpc.KlessAPIBlockingStub;
-import io.kless.Klessserver.GetServerVersionReply;
-import io.kless.Klessserver.GetServerVersionRequest;
-import io.kless.Klessserver.GetEventHandlersRequest;
-import io.kless.Klessserver.EventHandlerInformation;
-import io.kless.Klessserver.CreateEventHandlerRequest;
-import io.kless.Klessserver.CreateEventHandlerReply;
+import io.kless.GetServerVersionReply;
+import io.kless.GetServerVersionRequest;
+import io.kless.GetEventHandlersRequest;
+import io.kless.EventHandlerInformation;
+import io.kless.CreateEventHandlerRequest;
+import io.kless.CreateEventHandlerReply;
 
 @Path("handler")
 public class Handler {
@@ -80,6 +80,8 @@ public class Handler {
             eventHandler.add("eventHandlerBuilder", eventHandlerInformation.getEventHandlerBuilder());
             eventHandler.add("eventHandlerBuilderURL", eventHandlerInformation.getEventHandlerBuilderURL());
             eventHandler.add("frontend", eventHandlerInformation.getFrontend());
+            eventHandler.add("status", eventHandlerInformation.getStatus());
+            eventHandler.add("comment", eventHandlerInformation.getComment());
             
             eventHandlerArray.add(eventHandler);
         }
@@ -132,6 +134,7 @@ public class Handler {
 	        String frontend = requestJsonObject.getString("frontend");
 	        ByteString dependencies = ByteString.copyFrom(requestJsonObject.getString("dependencies"), "UTF-8");
 	        String dependenciesURL = null;
+	        String comment = requestJsonObject.getString("comment");
 	                
 	        log.info("name = " + name);
 	        
@@ -160,6 +163,7 @@ public class Handler {
 	                                                                                  .setEventHandlerVersion(version)
 	                                                                                  .setEventHandlerFrontend(frontend)
 	                                                                                  .setEventHandlerDependencies(dependencies)
+	                                                                                  .setComment(comment)
 	                                                                                  .build();
 	        
 	        CreateEventHandlerReply reply = stub.createEventHandler(request);

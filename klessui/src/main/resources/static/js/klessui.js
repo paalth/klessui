@@ -84,11 +84,22 @@ klessuiapp.controller("BuildersController", [ '$scope', 'builderService', functi
 
 klessuiapp.controller("CreateHandlerController", [ '$scope', 'handlerService', 'builderService', 'frontendService', function($scope, handlerService, builderService, frontendService) {	
 	
+	$scope.editorLanguages = ['Go', 'Java', 'Python'];
+	$scope.currentEditorlanguage = 'Go';
+	
 	builderService.getBuilders($scope);
 	frontendService.getFrontends($scope);
 		
 	$scope.createHandler = function(newHandler) {
 		handlerService.createHandler(newHandler, $scope);
+	}
+	
+	$scope.changeEditorLanguage = function() {
+		console.log("Current editor language = " + $scope.currentEditorlanguage);
+	}
+	
+	$scope.resetSource = function() {
+		console.log("Reset source code here, current language = " + $scope.currentEditorlanguage);
 	}
 }]);
 
