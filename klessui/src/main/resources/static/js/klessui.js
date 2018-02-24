@@ -13,12 +13,29 @@ klessuiapp.config(['$stateProvider', '$urlRouterProvider', function($stateProvid
     templateUrl: 'views/createHandler.html'
   }
   
+  var handlersDetailState = {
+	  name: 'handlersDetail',
+      url: '/handler/:eventHandlerName',
+      views: {
+        '@': {
+          templateUrl: 'views/handlerDetail.html',
+          controller: 'HandlerDetailsController'
+        }
+      },
+    }
+  
   var frontendsState = {
     name: 'frontends',
     url: '/frontends',
     templateUrl: 'views/frontends.html'
   }
 
+  var frontendCreateState = {
+	name: 'frontendCreate',
+	url: '/frontendCreate',
+	templateUrl: 'views/createFrontend.html'
+  }
+  
   var frontendTypesState = {
     name: 'frontendTypes',
     url: '/frontendTypes',
@@ -45,7 +62,9 @@ klessuiapp.config(['$stateProvider', '$urlRouterProvider', function($stateProvid
   
   $stateProvider.state(handlersState);
   $stateProvider.state(handlerCreateState);
+  $stateProvider.state(handlersDetailState);
   $stateProvider.state(frontendsState);
+  $stateProvider.state(frontendCreateState);
   $stateProvider.state(frontendTypesState);
   $stateProvider.state(buildersState);
   $stateProvider.state(helpState);
@@ -64,6 +83,36 @@ klessuiapp.controller("FrontendsController", [ '$scope', 'frontendService', func
 	
 	frontendService.getFrontends($scope);
 	
+	$scope.deleteFrontends = function() {
+		console.log("Currently selected frontends: ");
+		var selectedLen = $scope.selected.length;
+		var i;
+		for (i = 0; i < selectedLen; i++) {
+			console.log($scope.selected[i]);
+			frontendService.deleteFrontend($scope.selected[i]);
+			
+			var frontendsLen = $scope.frontends.length;
+			console.log("Current frontends length = " + frontendsLen);
+			var j, frontendsIndex = 0;
+			for (j = 0; j < frontendsLen; j++) {
+				if ($scope.frontends[j].eventHandlerFrontendName === $scope.selected[i].eventHandlerFrontendName) {
+					frontendsIndex = j;
+				}
+			}
+			console.log("Removing frontend at index = " + frontendsIndex);
+			$scope.frontends.splice(frontendsIndex, 1);
+		}
+		$scope.selected = [];
+	}
+}]);
+
+klessuiapp.controller("CreateFrontendController", [ '$scope', 'frontendService', 'frontendTypeService', function($scope, frontendService, frontendTypeService) {	
+	
+	frontendTypeService.getFrontendTypes($scope);
+	
+	$scope.createFrontend = function(newFrontend) {
+		frontendService.createFrontend(newFrontend, $scope);
+	}
 }]);
 
 klessuiapp.controller("FrontendTypesController", [ '$scope', 'frontendTypeService', function($scope, frontendTypeService) {	
@@ -84,31 +133,99 @@ klessuiapp.controller("BuildersController", [ '$scope', 'builderService', functi
 
 klessuiapp.controller("CreateHandlerController", [ '$scope', 'handlerService', 'builderService', 'frontendService', function($scope, handlerService, builderService, frontendService) {	
 	
-	$scope.editorLanguages = ['Go', 'Java', 'Python'];
-	$scope.currentEditorlanguage = 'Go';
+	$scope.newHandler = {};
+	$scope.newHandler.sourceCode = "";
+	
+	$scope.editorLanguages = ['golang', 'java', 'python'];
+	$scope.currentEditorlanguage = 'java';
 	
 	builderService.getBuilders($scope);
 	frontendService.getFrontends($scope);
-		
+	
+	$scope.aceLoaded = function(_editor) {
+		$scope.editor = _editor;
+	};
+		  
 	$scope.createHandler = function(newHandler) {
 		handlerService.createHandler(newHandler, $scope);
 	}
 	
 	$scope.changeEditorLanguage = function() {
 		console.log("Current editor language = " + $scope.currentEditorlanguage);
+		$scope.editor.getSession().setMode('ace/mode/' + $scope.currentEditorlanguage);
 	}
 	
-	$scope.resetSource = function() {
-		console.log("Reset source code here, current language = " + $scope.currentEditorlanguage);
+	$scope.createEmptyHandler = function() {
+		console.log("Create empty handler here, current language = " + $scope.currentEditorlanguage);
+		if ($scope.currentEditorlanguage === 'golang') {
+			$scope.newHandler.sourceCode = "package eventhandler\n\n" + 
+										  "import (\n" +
+										  "	\"fmt\"\n\n" +
+										  "	kl \"github.com/paalth/kless/pkg/interface/klessgo\"\n" +
+										  ")\n\n" +
+										  "//EventHandler dummy for now\n" +
+										  "type EventHandler struct {\n" +
+										  "}\n\n" +
+										  "//Handler the actual event handler that does nothing in this case\n" +
+										  "func (t EventHandler) Handler(c *kl.Context, resp *kl.Response, req *kl.Request) {\n" +
+										  "	fmt.Printf(\"Inside funcHandler\\n\")\n" +
+										  "}\n";
+		} else if ($scope.currentEditorlanguage === 'java') {
+			$scope.newHandler.sourceCode = "package io.kless;\n\n" + 
+										   "class EventHandler1 implements EventHandlerInterface {\n\n" + 
+										   "    public Response eventHandler(Context context, Request req) {\n" + 
+										   "        System.out.println(\"Inside event handler...\");\n\n" + 
+										   "        return null;\n" + 
+										   "    }\n\n" + 
+										   "}\n";
+		} else if ($scope.currentEditorlanguage === 'python') {
+			$scope.newHandler.sourceCode = "import sys\n\n" + 
+										   "class EventHandler1:\n" + 
+                                            "    def eventHandler(self, context, request, response):\n" + 
+                                            "        sys.stdout.write(\"Inside event handler example 1\")\n" + 
+                                            "        sys.stdout.flush()\n"; 
+		}
 	}
 }]);
 
-klessuiapp.controller("HandlersController", [ '$scope', 'handlerService', 'builderService', 'frontendService', function($scope, handlerService, builderService, frontendService) {	
+klessuiapp.controller("HandlerDetailsController", [ '$scope', 'handlerService', 'builderService', 'frontendService', '$location', function($scope, handlerService, builderService, frontendService, $location) {	
+
+	var absUrl = $location.absUrl();
+	var i = absUrl.lastIndexOf('/') + 1;
+	var handlerName = absUrl.substring(i, absUrl.length);
+
+	console.log("View handler detail, handler = " + handlerName);
+
+	$scope.eventHandlerName = handlerName;
+}]);
+
+klessuiapp.controller("HandlersController", [ '$scope', '$state', 'handlerService', 'builderService', 'frontendService', function($scope, $state, handlerService, builderService, frontendService) {	
 	
 	$scope.selected = [];
 	
 	handlerService.getHandlers($scope);
-		
+	
+	$scope.deleteHandlers = function() {
+		console.log("Currently selected handlers: ");
+		var selectedLen = $scope.selected.length;
+		var i;
+		for (i = 0; i < selectedLen; i++) {
+			console.log($scope.selected[i]);
+			handlerService.deleteHandler($scope.selected[i]);
+			
+			var handlersLen = $scope.handlers.length;
+			console.log("Current handlers length = " + handlersLen);
+			var j, handlersIndex = 0;
+			for (j = 0; j < handlersLen; j++) {
+				if ($scope.handlers[j].eventHandlerName === $scope.selected[i].eventHandlerName) {
+					handlersIndex = j;
+				}
+			}
+			console.log("Removing handler at index = " + handlersIndex);
+			$scope.handlers.splice(handlersIndex, 1);
+		}
+		$scope.selected = [];
+	}
 }]);
 
 klessuiapp.factory("handlerService", [ '$resource', function ($resource) {
@@ -139,35 +256,16 @@ function HandlerService(resource) {
 		
 		console.log("End createHandler");
 	}
-}
-
-klessuiapp.factory("builderService", [ '$resource', function ($resource) {
-	return new BuilderService($resource);
-}])
-
-function BuilderService(resource) {
 	
-	this.getBuilders = function(scope) {
-		console.log("Start getBuilders");
-		
-		var builderService = resource("api/builder");
-		builderService.get(function(response) {
-			console.log(response.status);
-			scope.builders = response.eventHandlerBuilderInformation;
-		});
-		
-		console.log("End getBuilders");
-	}
-	
-	this.createBuilder = function(newBuilder, scope) {
-		console.log("Start createBuilder");
+	this.deleteHandler = function(handler, scope) {
+		console.log("Start deleteHandler");
 
-		var builderService = resource("api/builder");
-		builderService.save(newBuilder, function(response) {
+		var handlerService = resource("api/handler/:id");
+		handlerService.delete({ id: handler.eventHandlerName }, function(response) {
 			console.log(response);
 		});
 		
-		console.log("End createBuilder");
+		console.log("End deleteHandler");
 	}
 }
 
@@ -198,6 +296,46 @@ function FrontendService(resource) {
 		});
 		
 		console.log("End createFrontend");
+	}
+	this.deleteFrontend = function(frontend, scope) {
+		console.log("Start deleteFrontend");
+
+		var frontendService = resource("api/frontend/:id");
+		frontendService.delete({ id: frontend.eventHandlerFrontendName }, function(response) {
+			console.log(response);
+		});
+		
+		console.log("End deleteFrontend");
+	}
+}
+
+klessuiapp.factory("builderService", [ '$resource', function ($resource) {
+	return new BuilderService($resource);
+}])
+
+function BuilderService(resource) {
+	
+	this.getBuilders = function(scope) {
+		console.log("Start getBuilders");
+		
+		var builderService = resource("api/builder");
+		builderService.get(function(response) {
+			console.log(response.status);
+			scope.builders = response.eventHandlerBuilderInformation;
+		});
+		
+		console.log("End getBuilders");
+	}
+	
+	this.createBuilder = function(newBuilder, scope) {
+		console.log("Start createBuilder");
+
+		var builderService = resource("api/builder");
+		builderService.save(newBuilder, function(response) {
+			console.log(response);
+		});
+		
+		console.log("End createBuilder");
 	}
 }
 

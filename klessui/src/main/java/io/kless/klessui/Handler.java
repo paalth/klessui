@@ -10,14 +10,13 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonWriter;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -28,23 +27,18 @@ import io.grpc.ManagedChannelBuilder;
 
 import io.kless.KlessAPIGrpc;
 import io.kless.KlessAPIGrpc.KlessAPIBlockingStub;
-import io.kless.GetServerVersionReply;
-import io.kless.GetServerVersionRequest;
 import io.kless.GetEventHandlersRequest;
 import io.kless.EventHandlerInformation;
 import io.kless.CreateEventHandlerRequest;
 import io.kless.CreateEventHandlerReply;
+import io.kless.DeleteEventHandlerRequest;
+import io.kless.DeleteEventHandlerReply;
+
 
 @Path("handler")
 public class Handler {
 	private static Logger log = Logger.getLogger(Handler.class.getName());
 
-    /**
-     * Method handling HTTP GET requests. The returned object will be sent
-     * to the client as "text/plain" media type.
-     *
-     * @return String that will be returned as a text/plain response.
-     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getHandlers() throws Exception {
@@ -64,14 +58,6 @@ public class Handler {
         		EventHandlerInformation eventHandlerInformation = responseIterator.next();
         		log.info("Event handler name = " + eventHandlerInformation.getEventHandlerName());
         		
-//        		string eventHandlerId = 1;
-//        		string eventHandlerName = 2;
-//        		string eventHandlerNamespace = 3;
-//        		string eventHandlerVersion = 4;
-//        		string eventHandlerBuilder  = 5;
-//        		string eventHandlerBuilderURL  = 6;
-//        		string frontend = 7;
-        		
             JsonObjectBuilder eventHandler = Json.createObjectBuilder();
             eventHandler.add("eventHandlerId", eventHandlerInformation.getEventHandlerId());
             eventHandler.add("eventHandlerName", eventHandlerInformation.getEventHandlerName());
@@ -80,19 +66,12 @@ public class Handler {
             eventHandler.add("eventHandlerBuilder", eventHandlerInformation.getEventHandlerBuilder());
             eventHandler.add("eventHandlerBuilderURL", eventHandlerInformation.getEventHandlerBuilderURL());
             eventHandler.add("frontend", eventHandlerInformation.getFrontend());
-            eventHandler.add("status", eventHandlerInformation.getStatus());
+            eventHandler.add("buildStatus", eventHandlerInformation.getBuildStatus());
+            eventHandler.add("eventHandlerAvailable", eventHandlerInformation.getEventHandlerAvailable());
             eventHandler.add("comment", eventHandlerInformation.getComment());
             
             eventHandlerArray.add(eventHandler);
         }
-        
-//        GetServerVersionRequest request = GetServerVersionRequest.newBuilder().setClientversion(Main.CLIENT_VERSION).build();
-//
-//        GetServerVersionReply reply = stub.getServerVersion(request);
-//        
-//        String serverVersion = reply.getServerversion();
-//        
-//        log.info("Server version = " + serverVersion);
         
         channel.shutdown();
         
@@ -125,30 +104,70 @@ public class Handler {
 	        JsonReader jsonReader = Json.createReader(new StringReader(requestBody));
 	        JsonObject requestJsonObject = jsonReader.readObject();        
 	
-	        String name = requestJsonObject.getString("name");
-	        String namespace = requestJsonObject.getString("namespace");
-	        String builder = requestJsonObject.getString("builder");
-	        ByteString sourceCode = ByteString.copyFrom(requestJsonObject.getString("sourceCode"), "UTF-8");
+	        String name = null;
+	        String namespace = "kless";
+	        String builder = null;
+	        ByteString sourceCode = null;
 	        String sourceCodeURL = null;
-	        String version = requestJsonObject.getString("version");
-	        String frontend = requestJsonObject.getString("frontend");
-	        ByteString dependencies = ByteString.copyFrom(requestJsonObject.getString("dependencies"), "UTF-8");
-	        String dependenciesURL = null;
-	        String comment = requestJsonObject.getString("comment");
-	                
+	        String version = "1.0";
+	        String frontend = null;
+	        ByteString dependencies = ByteString.EMPTY;
+	        String dependenciesURL = "";
+	        String comment = "";
+
+	        try {
+	        		name = requestJsonObject.getString("name");
+	        } catch (Exception e) {
+	        	
+	        }
+	        try {
+	        		namespace = requestJsonObject.getString("namespace");
+	        } catch (Exception e) {
+	        	
+	        }
+	        try {
+	        		builder = requestJsonObject.getString("builder");
+	        } catch (Exception e) {
+	        	
+	        }
+	        try {
+	        		sourceCode = ByteString.copyFrom(requestJsonObject.getString("sourceCode"), "UTF-8");
+	        } catch (Exception e) {
+	        	
+	        }
+	        try {
+	        		sourceCodeURL = null;
+	        } catch (Exception e) {
+	        	
+	        }
+	        try {
+	        		version = requestJsonObject.getString("version");
+	        } catch (Exception e) {
+	        	
+	        }
+	        try {
+	        		frontend = requestJsonObject.getString("frontend");
+	        } catch (Exception e) {
+	        	
+	        }
+	        try {
+	        		dependencies = ByteString.copyFrom(requestJsonObject.getString("dependencies"), "UTF-8");
+	        } catch (Exception e) {
+	        	
+	        }
+	        try {
+	        		dependenciesURL = null;
+	        } catch (Exception e) {
+	        	
+	        }
+	        try {
+	        		comment = requestJsonObject.getString("comment");
+	        } catch (Exception e) {
+	        	
+	        }
+	        
 	        log.info("name = " + name);
 	        
-	//        string clientversion = 1;
-	//        string eventHandlerName = 2;
-	//        string eventHandlerNamespace = 3;
-	//        string eventHandlerBuilder = 4;
-	//        bytes  eventHandlerSourceCode = 5;
-	//        string eventHandlerSourceCodeURL = 6;
-	//        string eventHandlerVersion = 7;
-	//        string eventHandlerFrontend = 8;
-	//        bytes  eventHandlerDependencies = 9;
-	//        string eventHandlerDependenciesURL = 10;
-			
 	        ManagedChannel channel = ManagedChannelBuilder.forAddress(Main.serverHostname, Main.serverPortNumber)
 	                .usePlaintext(true)
 	                .build();
@@ -170,6 +189,8 @@ public class Handler {
 	    		
 	        String response = reply.getResponse();
 	        
+	        channel.shutdown();
+	        
 	        log.info("Create event handler response = " + response);
     		} catch (Exception e) {
     			e.printStackTrace();
@@ -178,4 +199,37 @@ public class Handler {
         return "{\"status\": \"ok\"}";
     }
     
+    @DELETE
+    @Path("/{handlerName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteHandler(@PathParam("handlerName") String handlerName) throws Exception {
+    		log.info("Entering deleteHandler()");
+    		
+    		log.info("Handler name: " + handlerName);
+    		try {
+    			
+    	        ManagedChannel channel = ManagedChannelBuilder.forAddress(Main.serverHostname, Main.serverPortNumber)
+    	                .usePlaintext(true)
+    	                .build();
+    	        
+    	        KlessAPIBlockingStub stub = KlessAPIGrpc.newBlockingStub(channel);
+    	        
+    	        DeleteEventHandlerRequest request = DeleteEventHandlerRequest.newBuilder().setClientversion(Main.CLIENT_VERSION)
+    	        		                                                                      .setEventHandlerName(handlerName)
+    	        		                                                                      .setEventHandlerNamespace("kless")
+    	        		                                                                      .build();
+    	        
+    	        DeleteEventHandlerReply reply = stub.deleteEventHandler(request);
+    	        
+    	        String response = reply.getResponse();
+    	        
+    	        channel.shutdown();
+    	        
+    	        log.info("Delete event handler response = " + response);
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+        
+        return "{\"status\": \"ok\"}";
+    }
 }
