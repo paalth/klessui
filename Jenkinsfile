@@ -8,10 +8,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
-                sh 'printenv | sort'
-                sh 'make'
-                echo 'Build complete'
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'KLESS_DEST_REGISTRY_CREDENTIALS', usernameVariable: 'KLESS_DEST_REGISTRY_USERNAME', passwordVariable: 'KLESS_DEST_REGISTRY_PASSWORD']]) {
+               	    echo 'Building..'
+                    sh 'printenv | sort'
+                    sh 'make'
+                    echo 'Build complete'
+		}
             }
         }
 
