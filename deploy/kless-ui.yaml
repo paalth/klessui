@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: kless-ui
+  namespace: KLESS_NAMESPACE
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: kless-ui
+      namespace: KLESS_NAMESPACE
+      labels:
+        app: kless-ui
+    spec:
+      containers:
+      - name: kless-ui
+        image: KLESS_DEST_REGISTRY_HOSTPORTklessv1/klessui:BUILD_ID
+        imagePullPolicy: Always
+        env:
+          - name: KLESS_UI_PORT
+            value: "8080"
+          - name: KLESS_UI_SERVER_HOSTNAME
+            value: "192.168.99.100"
+          - name: KLESS_UI_SERVER_PORT
+            value: "31190"
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kless-ui
+    task: ui
+  name: kless-ui
+  namespace: KLESS_NAMESPACE
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+  selector:
+    app: kless-ui
+  type: NodePort
