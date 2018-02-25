@@ -15,11 +15,12 @@ import java.net.URI;
  */
 public class Main {
     public static final String CLIENT_VERSION = "kless-ui-0.0.1";
+    
     public static final String ENV_KLESS_UI_PORT_NUMBER = "KLESS_UI_PORT";
     public static final String ENV_KLESS_UI_SERVER_HOSTNAME = "KLESS_UI_SERVER_HOSTNAME";
     public static final String ENV_KLESS_UI_SERVER_PORT_NUMBER = "KLESS_UI_SERVER_PORT";
-    public static final String BASE_URI = "http://0.0.0.0:8080/api/";
-    public static final int    DEFAULT_PORT = 8080;
+    
+    public static final int    DEFAULT_PORT = 7070;
     
     static String serverHostname = null;
     static int serverPortNumber = 0;
