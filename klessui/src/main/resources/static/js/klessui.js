@@ -13,8 +13,8 @@ klessuiapp.config(['$stateProvider', '$urlRouterProvider', function($stateProvid
     templateUrl: 'views/createHandler.html'
   }
   
-  var handlersDetailState = {
-	  name: 'handlersDetail',
+  var handlerDetailState = {
+	  name: 'handlerDetail',
       url: '/handler/:eventHandlerName',
       views: {
         '@': {
@@ -30,6 +30,17 @@ klessuiapp.config(['$stateProvider', '$urlRouterProvider', function($stateProvid
     templateUrl: 'views/frontends.html'
   }
 
+  var frontendDetailState = {
+	  name: 'frontendDetail',
+	  url: '/frontend/:frontendName',
+	  views: {
+	    '@': {
+	      templateUrl: 'views/frontendDetail.html',
+	      controller: 'FrontendDetailsController'
+	        }
+	  },	  
+  }
+  
   var frontendCreateState = {
 	name: 'frontendCreate',
 	url: '/frontendCreate',
@@ -62,9 +73,10 @@ klessuiapp.config(['$stateProvider', '$urlRouterProvider', function($stateProvid
   
   $stateProvider.state(handlersState);
   $stateProvider.state(handlerCreateState);
-  $stateProvider.state(handlersDetailState);
+  $stateProvider.state(handlerDetailState);
   $stateProvider.state(frontendsState);
   $stateProvider.state(frontendCreateState);
+  $stateProvider.state(frontendDetailState);
   $stateProvider.state(frontendTypesState);
   $stateProvider.state(buildersState);
   $stateProvider.state(helpState);
@@ -113,6 +125,24 @@ klessuiapp.controller("CreateFrontendController", [ '$scope', 'frontendService',
 	$scope.createFrontend = function(newFrontend) {
 		frontendService.createFrontend(newFrontend, $scope);
 	}
+}]);
+
+klessuiapp.controller("FrontendDetailsController", [ '$scope', 'handlerService', 'builderService', 'frontendService', '$location', function($scope, handlerService, builderService, frontendService, $location) {	
+
+	var absUrl = $location.absUrl();
+	var i = absUrl.lastIndexOf('/') + 1;
+	var frontendName = absUrl.substring(i, absUrl.length);
+
+	console.log("View frontend detail, frontend = " + frontendName);
+
+	$scope.frontendName = frontendName;
+	
+	$scope.invokeFrontend = function(frontendTestInfo) {
+		console.log("Sending frontend test info = " + frontendTestInfo.input);
+		
+		frontendService.invokeFrontend($scope.frontendName, frontendTestInfo.input, $scope);
+	}
+	
 }]);
 
 klessuiapp.controller("FrontendTypesController", [ '$scope', 'frontendTypeService', function($scope, frontendTypeService) {	
@@ -197,6 +227,8 @@ klessuiapp.controller("HandlerDetailsController", [ '$scope', 'handlerService', 
 	console.log("View handler detail, handler = " + handlerName);
 
 	$scope.eventHandlerName = handlerName;
+	
+	handlerService.describeHandler($scope, handlerName);
 }]);
 
 klessuiapp.controller("HandlersController", [ '$scope', '$state', 'handlerService', 'builderService', 'frontendService', function($scope, $state, handlerService, builderService, frontendService) {	
@@ -244,6 +276,18 @@ function HandlerService(resource) {
 		});
 		
 		console.log("End getHandlers");
+	}
+	
+	this.describeHandler = function(scope, handlerName) {
+		console.log("Start describeHandler");
+		
+		var handlerService = resource("api/handler/:id");
+		handlerService.get({ id: handlerName }, function(response) {
+			console.log(response.status);
+			scope.handler = response.handler;
+		});
+		
+		console.log("End describeHandler");		
 	}
 	
 	this.createHandler = function(newHandler, scope) {
@@ -297,6 +341,7 @@ function FrontendService(resource) {
 		
 		console.log("End createFrontend");
 	}
+	
 	this.deleteFrontend = function(frontend, scope) {
 		console.log("Start deleteFrontend");
 
@@ -307,6 +352,22 @@ function FrontendService(resource) {
 		
 		console.log("End deleteFrontend");
 	}
+	
+	this.invokeFrontend = function(frontendName, input, scope) {
+		console.log("Start invokeFrontend");
+
+		var frontendService = resource("api/frontend/test/:frontendName");
+		frontendService.save({ frontendName: frontendName }, input, function(response) {
+			console.log(response);
+			
+			scope.frontend.status = response.status;
+			scope.frontend.output = response.output;
+		});
+		
+		console.log("End invokeFrontend");
+	}
+	
+	
 }
 
 klessuiapp.factory("builderService", [ '$resource', function ($resource) {

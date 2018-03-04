@@ -29,6 +29,7 @@
 		        <th align="left" style="padding-left: 25px">Name</th>
 		        <th align="left">Namespace</th>
 		        <th align="left">Version</th>
+		        <th align="left">Frontend</th>
 		        <th align="left">Build Status</th>
 		        <th align="left">Handler Available</th>
 		        <th align="left">Comment</th>
@@ -36,9 +37,10 @@
 		    </thead>
 		    <tbody md-body>
 		      <tr md-row md-select="handler" md-select-id="eventHandlerName" md-auto-select ng-repeat="handler in handlers">
-		        <td md-cell> <a ui-sref="handlersDetail({ eventHandlerName: handler.eventHandlerName })">  {{ handler.eventHandlerName }} </a>  </td>
+		        <td md-cell> <a ui-sref="handlerDetail({ eventHandlerName: handler.eventHandlerName })">  {{ handler.eventHandlerName }} </a>  </td>
 		        <td md-cell>{{ handler.eventHandlerNamespace }}</td>
 		        <td md-cell>{{ handler.eventHandlerVersion }}</td>
+		        <td md-cell> <a ui-sref="frontendDetail({ frontendName: handler.frontend })"> {{ handler.frontend }} </a> </td>
 		        <td md-cell>{{ handler.buildStatus }}</td>
 		        <td md-cell>{{ handler.eventHandlerAvailable }}</td>
 		        <td md-cell>{{ handler.comment }}</td>

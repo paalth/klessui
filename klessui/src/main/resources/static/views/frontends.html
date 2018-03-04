@@ -32,7 +32,7 @@
 		    </thead>
 		    <tbody md-body>
 		      <tr md-row md-select="frontend" md-select-id="eventHandlerFrontendName" md-auto-select ng-repeat="frontend in frontends">
-		        <td md-cell>{{ frontend.eventHandlerFrontendName }}</td>
+		        <td md-cell> <a ui-sref="frontendDetail({ frontendName: frontend.eventHandlerFrontendName })"> {{ frontend.eventHandlerFrontendName }} </a> </td>
 		        <td md-cell>{{ frontend.eventHandlerFrontendType }}</td>
 		        <td md-cell>N/A</td>
 		        <td md-cell>{{ frontend.comment }}</td>

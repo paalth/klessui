@@ -1,7 +1,96 @@
 <div ng-controller="HandlerDetailsController">
 
-Handler detail goes here...
+	<md-content layout-padding>
+    
+		<md-card>
+    
+			<ng-form name="HandleDetailForm">
+		    
+				<div layout="row" layout-padding>
+			
+					<div flex="20">
+  
+					    <h2>Handler information</h2>
+					    
+					    <div>
+						id: {{ handler.eventHandlerInformation.eventHandlerId }}	
+						</div>
+											    
+					    <div>
+						Name: {{ handler.eventHandlerInformation.eventHandlerName }}	
+						</div>
+						
+						<p/>
+						
+						<div>
+						Namespace: {{ handler.eventHandlerInformation.eventHandlerNamespace }}
+						</div>
 
-{{ eventHandlerName }}
+						<p/>
+						
+						<div>
+						Version: {{ handler.eventHandlerInformation.eventHandlerVersion }}
+						</div>
 
+						<p/>
+						
+						<div>
+						Builder: {{ handler.eventHandlerInformation.eventHandlerBuilder }}
+						</div>
+						
+						<p/>
+									
+						<div>
+						Frontend: {{ handler.eventHandlerInformation.frontend }}
+						</div>
+						
+						<p/>
+									
+						<div>
+						Build status: {{ handler.eventHandlerInformation.buildStatus }}
+						</div>
+
+						<p/>
+									
+						<div>
+						Handler available: {{ handler.eventHandlerInformation.eventHandlerAvailable }}
+						</div>
+												
+						<p/>
+																		
+						<div>
+						Comment: {{ handler.eventHandlerInformation.comment }}
+						</div>
+												
+					</div>
+	
+					<div flex="80" layout="column">				   		    			    
+						
+						<div layout="column" layout-padding layout-align="space-between center">
+						
+						    <h2>Source code:</h2>
+						    
+	    						<div ui-ace="{
+						       useWrapMode : true,
+						       showGutter: true,
+						       theme:'twilight',
+						       mode: 'java',
+	                           onLoad: aceLoaded
+						       }" ng-model="handler.sourceCode" style="width: 100%; height: 600px;"></div>
+
+						    <h2>Build output:</h2>
+						    
+						    <textarea ng-model="handler.buildOutput" style="width: 100%; height: 250px; font-family: monospace"></textarea>
+						    						    
+						</div>
+					</div>
+			
+				</div>
+
+			</ng-form>
+			
+		</md-card>
+			
+	</md-content>
+			    
 </div>

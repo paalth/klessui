@@ -1,0 +1,75 @@
+<div ng-controller="FrontendDetailsController">
+
+	<md-content layout-padding>
+    
+		<md-card>
+    
+			<ng-form name="HandleDetailForm">
+		    
+				<div layout="row" layout-padding>
+			
+					<div flex="35">
+  
+					    <h2>Frontend information</h2>
+					    
+					    <div>
+						Name: {{ frontendName }}	
+						</div>
+						
+						<p/>
+						
+						<div>
+						Type: some type
+						</div>
+
+						<p/>
+						
+						<div>
+						Comment: some comment
+						</div>
+												
+						<p/>
+
+						<div>
+						Creation date: a creation date
+						</div>
+
+						<p/>
+						
+						<div>
+						Handler: handler name
+						</div>
+						
+					</div>
+				  
+	
+					<div flex="65">				   		    			    
+						
+						<div layout="column">
+						
+						    <h2>Input</h2>
+
+						    <textarea ng-model="frontend.input" style="width: 100%; height: 250px;"></textarea>
+
+						    <h2>Output</h2>
+
+						    <div>
+							Status: {{ frontend.status }}	
+							</div>
+						
+						    <textarea ng-model="frontend.output" style="width: 100%; height: 250px;"></textarea>
+						    				    
+						    <md-button class="md-raised md-primary" id="testButton" ng-click="invokeFrontend(frontend)">Test</md-button>
+						    
+						</div>
+					</div>
+			
+				</div>
+
+			</ng-form>
+			
+		</md-card>
+			
+	</md-content>
+	
+</div>

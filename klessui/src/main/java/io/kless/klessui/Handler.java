@@ -29,6 +29,8 @@ import io.kless.KlessAPIGrpc;
 import io.kless.KlessAPIGrpc.KlessAPIBlockingStub;
 import io.kless.GetEventHandlersRequest;
 import io.kless.EventHandlerInformation;
+import io.kless.DescribeEventHandlerRequest;
+import io.kless.DescribeEventHandlerReply;
 import io.kless.CreateEventHandlerRequest;
 import io.kless.CreateEventHandlerReply;
 import io.kless.DeleteEventHandlerRequest;
@@ -78,6 +80,77 @@ public class Handler {
         JsonObjectBuilder model = Json.createObjectBuilder();
         model.add("status", "OK");
         model.add("eventHandlerInformation", eventHandlerArray);
+        
+        StringWriter stWriter = new StringWriter();
+        JsonWriter jsonWriter = Json.createWriter(stWriter);
+        jsonWriter.writeObject(model.build());
+        jsonWriter.close();
+         
+        String jsonData = stWriter.toString();
+        System.out.println(jsonData);
+        
+        log.info("Response: " + jsonData);
+        
+        return jsonData;
+    }
+    
+    @GET
+    @Path("/{handlerName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String describeHandler(@PathParam("handlerName") String handlerName) throws Exception {
+    		log.info("Entering describeHandler()");
+    		
+    		log.info("Handler name: " + handlerName);
+    		
+    		String status = "error";
+        JsonObjectBuilder handler = Json.createObjectBuilder();
+        
+    		try {
+    			
+    	        ManagedChannel channel = ManagedChannelBuilder.forAddress(Main.serverHostname, Main.serverPortNumber)
+    	                .usePlaintext(true)
+    	                .build();
+    	        
+    	        KlessAPIBlockingStub stub = KlessAPIGrpc.newBlockingStub(channel);
+    	        
+    	        DescribeEventHandlerRequest request = DescribeEventHandlerRequest.newBuilder().setClientversion(Main.CLIENT_VERSION)
+    	        		                                                                      .setEventHandlerName(handlerName)
+    	        		                                                                      .setEventHandlerNamespace("kless")
+    	        		                                                                      .build();
+    	        
+    	        DescribeEventHandlerReply reply = stub.describeEventHandler(request);
+    	        
+    	        String response = reply.getResponse();
+    	        
+    	        channel.shutdown();
+    	        
+    	        log.info("Describe event handler response = " + response);
+    	        
+    	        status = "OK";
+    	        
+    	        JsonObjectBuilder eventHandler = Json.createObjectBuilder();
+            eventHandler.add("eventHandlerId", reply.getEventHandlerInformation().getEventHandlerId());
+            eventHandler.add("eventHandlerName", reply.getEventHandlerInformation().getEventHandlerName());
+            eventHandler.add("eventHandlerNamespace", reply.getEventHandlerInformation().getEventHandlerNamespace());
+            eventHandler.add("eventHandlerVersion", reply.getEventHandlerInformation().getEventHandlerVersion());
+            eventHandler.add("eventHandlerBuilder", reply.getEventHandlerInformation().getEventHandlerBuilder());
+            eventHandler.add("eventHandlerBuilderURL", reply.getEventHandlerInformation().getEventHandlerBuilderURL());
+            eventHandler.add("frontend", reply.getEventHandlerInformation().getFrontend());
+            eventHandler.add("buildStatus", reply.getEventHandlerInformation().getBuildStatus());
+            eventHandler.add("eventHandlerAvailable", reply.getEventHandlerInformation().getEventHandlerAvailable());
+            eventHandler.add("comment", reply.getEventHandlerInformation().getComment());
+    	        
+            handler.add("eventHandlerInformation", eventHandler.build());
+    	        handler.add("sourceCode", new String(reply.getSourceCode().toByteArray()));
+    	        handler.add("buildOutput", new String(reply.getBuildOutput().toByteArray()));
+
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+        
+        JsonObjectBuilder model = Json.createObjectBuilder();
+        model.add("status", status);
+        model.add("handler", handler.build());
         
         StringWriter stWriter = new StringWriter();
         JsonWriter jsonWriter = Json.createWriter(stWriter);
